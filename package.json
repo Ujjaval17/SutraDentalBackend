@@ -1,0 +1,30 @@
+{
+  "name": "sutradentalbackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
+    "@google-cloud/storage": "^7.9.0",
+    "b2": "^0.1.11",
+    "backblaze-b2": "^0.9.12",
+    "backbone": "^1.6.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.0",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.3.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^8.0.4",
+    "nodemon": "^3.1.0"
+  }
+}
