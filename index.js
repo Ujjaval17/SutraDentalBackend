@@ -10,7 +10,9 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+}));
 
 app.use("/images", express.static("resources/images"));
 
@@ -68,7 +70,7 @@ app.put(
 
     try {
       // Handle image upload
-      const imageUrl = `http://localhost:5000/images/${req.file.filename}`; // Get the uploaded file's filename from req.file
+      const imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`;
 
       // Update treatment details in the database using async/await
       const updatedTreatment = await Treatment.findByIdAndUpdate(
@@ -99,7 +101,7 @@ app.post("/add-treatment", upload.single("image_url"), async (req, res) => {
 
   try {
     // Handle image upload
-    const imageUrl = `http://localhost:5000/images/${req.file.filename}`; // Get the uploaded file's filename from req.file
+      const imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`;
 
     // Create new treatment in the database using async/await
     const newTreatment = new Treatment({
@@ -125,7 +127,7 @@ async function addTreatments(treatments) {
   try {
     const treatmentsWithImages = treatments.map((treatment) => {
       const imagePath = `/${treatment.image_path}`;
-      const imageUrl = `http://localhost:5000${imagePath}`;
+      const imageUrl = `${process.env.BASE_URL}${imagePath}`;
 
       return {
         treatment_name: treatment.treatment_name,
@@ -226,7 +228,7 @@ app.post("/add-blog", upload.single("image_url"), async (req, res) => {
 
   try {
     // Handle image upload
-    const imageUrl = `http://localhost:5000/images/${req.file.filename}`; // Get the uploaded file's filename from req.file
+    const imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`;
 
     // Create new blog in the database using async/await
     const newBlog = new Blog({
@@ -257,7 +259,7 @@ app.put("/blog-update/:_id", upload.single("image_url"), async (req, res) => {
     const updateFields = { title, short_desc, long_desc, date };
 
     if (req.file) {
-      updateFields.image_url = `http://localhost:5000/images/${req.file.filename}`;
+      updateFields.image_url = `${process.env.BASE_URL}/images/${req.file.filename}`;
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
@@ -302,7 +304,7 @@ async function addBlogs(blogs) {
   try {
     const blogsWithImages = blogs.map((blog) => {
       const imagePath = `/${blog.image_path}`;
-      const imageUrl = `http://localhost:5000${imagePath}`;
+      const imageUrl = `${process.env.BASE_URL}${imagePath}`;
 
       return {
         title: blog.title,
@@ -527,7 +529,7 @@ app.put(
 
       // If an image is uploaded, include the imageUrl in the update
       if (req.file) {
-        updatedData.imageUrl = `http://localhost:5000/images/${req.file.filename}`; // Adjust the path as needed
+        updatedData.imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`;
       }
 
       const updatedClinic = await ClinicDetails.findByIdAndUpdate(
@@ -557,7 +559,7 @@ async function addClinicDetails(clinicDetails) {
   try {
     const clinicDetailsWithImage = {
       ...clinicDetails,
-      imageUrl: `http://localhost:5000/${clinicDetails.image_path}`,
+      imageUrl: `${process.env.BASE_URL}/${clinicDetails.image_path}`,
     };
 
     // Insert clinic details into the database
@@ -628,7 +630,7 @@ app.post("/login", upload.none(), async (req, res) => {
       },
     };
 
-    const token = jwt.sign(payload, "your_jwt_secret", { expiresIn: "1h" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.json({
       message: "Login successful",
@@ -709,7 +711,7 @@ app.post("/book-appointment", async (req, res) => {
 });
 
 // Start the server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
