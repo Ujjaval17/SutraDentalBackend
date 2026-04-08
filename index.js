@@ -700,13 +700,17 @@ app.post("/book-appointment", async (req, res) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
-    res
-      .status(200)
-      .json({ message: "Appointment booked successfully. Email sent." });
+    res.status(200).json({
+      message:
+        "Appointment request received. We will contact you to confirm.",
+    });
+
+    transporter.sendMail(mailOptions).catch((err) => {
+      console.error("Error sending appointment email (background):", err);
+    });
   } catch (error) {
-    console.error("Error sending appointment email:", error);
-    res.status(500).json({ error: "Failed to send appointment email." });
+    console.error("Error preparing appointment booking:", error);
+    res.status(500).json({ error: "Failed to process appointment request." });
   }
 });
 
