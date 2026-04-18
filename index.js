@@ -661,9 +661,13 @@ app.post("/book-appointment", async (req, res) => {
   }
 
   try {
+    const notifyTo =
+      (process.env.APPOINTMENT_NOTIFY_EMAIL || "").trim() ||
+      process.env.MAIL_USER;
+
     const mailOptions = {
       from: `"SUTRA DENTAL" <${process.env.MAIL_USER}>`,
-      to: "vadviujjaval@gmail.com",
+      to: notifyTo,
       subject: "New Appointment Booking",
       html: `
         <h2>New Appointment Booking</h2>
